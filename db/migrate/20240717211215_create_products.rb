@@ -3,9 +3,9 @@ class CreateProducts < ActiveRecord::Migration[7.1]
     create_table :products do |t|
       t.string :name
       t.text :description
-      t.decimal :price
+      t.decimal :price, precision: 10, scale: 2
       t.integer :stock_quantity
-      t.string :category
+      t.references :category, foreign_key: true
 
       t.timestamps
     end

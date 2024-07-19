@@ -1,14 +1,20 @@
 ActiveAdmin.register Product do
-  permit_params :name, :description, :price, :category_id, :image_url
+  # Filter configurations
+  filter :name
+  filter :price
+  filter :category
+  # For associations, you might need custom filters
+  # For example:
+  # filter :reviews_comment_cont, as: :string, label: 'Review Comment'
+  # filter :product_images_image_url_cont, as: :string, label: 'Image URL'
 
-  form do |f|
-    f.inputs 'Product Details' do
-      f.input :name
-      f.input :description
-      f.input :price
-      f.input :category
-      f.input :image_url, as: :file
-    end
-    f.actions
+  # Index page configuration
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :price
+    column :category
+    actions
   end
 end

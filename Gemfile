@@ -31,6 +31,8 @@ gem 'activeadmin'
 gem 'devise'
 gem 'sassc'
 gem 'carrierwave'
+gem 'ransack'
+
 
 
 # Use Redis adapter to run Action Cable in production

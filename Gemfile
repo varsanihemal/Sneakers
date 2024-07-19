@@ -30,6 +30,7 @@ gem "jbuilder"
 gem 'activeadmin'
 gem 'devise'
 gem 'sassc'
+gem 'carrierwave'
 
 
 # Use Redis adapter to run Action Cable in production

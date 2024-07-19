@@ -1,0 +1,27 @@
+<div class="product-page">
+  <div class="product-images">
+    <div class="main-image">
+      <%= image_tag @product.image, alt: @product.name %>
+    </div>
+    <div class="thumbnail-images">
+      <% @product.product_images.each do |image| %>
+        <%= image_tag image.image_url, class: "thumbnail", alt: @product.name %>
+      <% end %>
+    </div>
+  </div>
+  <div class="product-details">
+    <h2>Fall Limited Edition Sneakers</h2>
+    <p class="product-description"><%= @product.description %></p>
+    <div class="product-price">
+      <span class="current-price">$<%= @product.price %></span>
+      <span class="discount">50%</span>
+      <span class="original-price">$250.00</span>
+    </div>
+    <div class="quantity-selector">
+      <button class="minus-btn">-</button>
+      <input type="number" value="0" min="0" class="quantity-input">
+      <button class="plus-btn">+</button>
+    </div>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+</div>

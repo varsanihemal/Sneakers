@@ -1,6 +1,7 @@
 # Clear existing data
-Category.destroy_all
+ProductImage.destroy_all
 Product.destroy_all
+Category.destroy_all
 AdminUser.destroy_all if Rails.env.development?
 
 # Create categories
@@ -37,7 +38,10 @@ products.each do |product_data|
   # Attach image if it exists
   image_path = Rails.root.join('public', 'images', product_data[:image_url])
   if File.exist?(image_path)
+    puts "Attaching image: #{image_path}" # Debug output
     new_product.image.attach(io: File.open(image_path), filename: product_data[:image_url])
+  else
+    puts "Image not found: #{image_path}" # Debug output
   end
 
   new_product.save!

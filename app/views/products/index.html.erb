@@ -1,11 +1,15 @@
-<% @products.each do |product| %>
-  <div class="product">
-    <%= link_to product.name, product_path(product) %>
-    <% if product.image.attached? %>
-      <%= image_tag product.image %>
-    <% else %>
-      <p>No image available</p>
-    <% end %>
-    <p><%= number_to_currency(product.price) %></p>
+<!-- app/views/products/show.html.erb -->
+<% if @product.present? %>
+  <div class="product-images">
+    <div class="main-image">
+      <%= image_tag @product.image.url, alt: @product.name if @product.image.present? %>
+    </div>
+    <div class="thumbnail-images">
+      <% @product.product_images.each do |image| %>
+        <%= image_tag image.url, alt: @product.name %>
+      <% end %>
+    </div>
   </div>
+<% else %>
+  <p>Product not found.</p>
 <% end %>

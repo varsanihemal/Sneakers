@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Sneakers</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>Sneakers</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application' %>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="left">
+        <div class="logo">
+          <%= image_tag 'logo.svg', alt: 'Logo' %>
+        </div>
+        <nav>
+          <ul>
+            <li><%= link_to "Men", men_path %></li>
+            <li><%= link_to "Women", women_path %></li>
+            <li><%= link_to "About", about_path %></li>
+            <li><%= link_to "Contact", contact_path %></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="user-menu">
+        <% if user_signed_in? %>
+          <%= link_to "Cart", cart_path, class: "cart-link" %>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
+        <% else %>
+          <%= link_to "Login", new_user_session_path, class: "login-link" %>
+          <%= link_to "Sign Up", new_user_registration_path, class: "signup-link" %>
+        <% end %>
+      </div>
+    </div>
+  </header>
 
-  <body>
-    <%= yield %>
-  </body>
+  <%= yield %>
+
+</body>
 </html>

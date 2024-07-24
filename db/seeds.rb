@@ -39,7 +39,7 @@ products.each do |product_data|
   image_path = Rails.root.join('public', 'images', product_data[:image_url])
   if File.exist?(image_path)
     puts "Attaching image: #{image_path}" # Debug output
-    new_product.image.attach(io: File.open(image_path), filename: product_data[:image_url])
+    new_product.image.attach(io: File.open(image_path), filename: product_data[:image_url], content_type: 'image/jpeg')
   else
     puts "Image not found: #{image_path}" # Debug output
   end

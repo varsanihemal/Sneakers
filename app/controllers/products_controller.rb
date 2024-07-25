@@ -12,6 +12,8 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @casual_shoes = Product.casual_shoes
+    @product = Product.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path, alert: 'Product not found'
   end
 end

@@ -15,21 +15,22 @@
       <div class="left">
         <div class="logo">
           <%= link_to root_path do %>
-          <%= image_tag 'logo.svg', alt: 'Logo' %>
-        <% end %>
+            <%= image_tag 'logo.svg', alt: 'Logo' %>
+          <% end %>
         </div>
         <nav>
           <ul>
             <!-- Dropdown for Categories -->
             <ul>
               <li class="dropdown">
-               <a href="#" class="dropdown-toggle">Categories</a>
+                <a href="#" class="dropdown-toggle">Categories</a>
                 <ul class="dropdown-menu">
-                <% Category.all.each do |category| %>
-                  <li><%= link_to category.name, category_path(category) %></li>
-                <% end %>
-            </li>
-              </ul>
+                  <% Category.all.each do |category| %>
+                    <li><%= link_to category.name, category_path(category) %></li>
+                  <% end %>
+                </ul>
+              </li>
+            </ul>
             <li><%= link_to "About", about_path %></li>
             <li><%= link_to "Contact", contact_path %></li>
           </ul>
@@ -37,6 +38,9 @@
       </div>
       <div class="user-menu">
         <% if user_signed_in? %>
+          <div class="user-info">
+            <p>Welcome, <%= current_user.email %></p>
+          </div>
           <%= link_to "Cart", cart_path, class: "cart-link" %>
           <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
         <% else %>

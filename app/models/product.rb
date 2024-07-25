@@ -7,7 +7,12 @@ class Product < ApplicationRecord
   has_many :product_images, dependent: :destroy
 
   def self.casual_shoes
-    where(category_id: Category.find_by(name: 'Casual Shoes').id)
+    category = Category.find_by(name: 'Casual Shoes')
+    if category
+      where(category_id: category.id)
+    else
+      none
+    end
   end
 
   # ActiveStorage for image attachments (if needed)

@@ -1,0 +1,24 @@
+/* app/assets/stylesheets/products.css */
+.category-form {
+    margin-bottom: 20px;
+  }
+  
+  .category-form select {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .filter-button {
+    padding: 5px 10px;
+  }
+  
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .product {
+    margin: 10px;
+    width: calc(25% - 20px);
+  }
+  

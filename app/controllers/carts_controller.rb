@@ -1,15 +1,7 @@
-class CartsController < ApplicationController
-  before_action :authenticate_user!, only: [:checkout, :update]
+class CartController < ApplicationController
+  before_action :authenticate_user! # Ensure user is signed in to view cart
 
   def show
-    # Display user's cart
-  end
-
-  def checkout
-    # Handle checkout process, requires authentication
-  end
-
-  def update
-    # Update cart items, requires authentication
+    @cart = current_user.cart
   end
 end

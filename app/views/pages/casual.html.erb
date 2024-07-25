@@ -1,7 +1,6 @@
-<!-- app/views/products/index.html.erb -->
-<h1>Products</h1>
+<h1>Casual Products</h1>
 
-<%= form_with url: products_path, method: :get, local: true, class: "category-form" do %>
+<%= form_with url: casual_path, method: :get, local: true, class: "category-form" do %>
   <%= select_tag :category, options_from_collection_for_select(@categories, :id, :name, params[:category]), prompt: "Select a category" %>
   <%= submit_tag "Filter", class: "filter-button" %>
 <% end %>

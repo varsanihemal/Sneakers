@@ -7,18 +7,29 @@
 
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'application' %>
+  <%= stylesheet_link_tag 'custom' %> <!-- Link to your custom CSS file -->
 </head>
 <body>
   <header>
     <div class="container">
       <div class="left">
         <div class="logo">
+          <%= link_to root_path do %>
           <%= image_tag 'logo.svg', alt: 'Logo' %>
+        <% end %>
         </div>
         <nav>
           <ul>
-            <li><%= link_to "Men", men_path %></li>
-            <li><%= link_to "Women", women_path %></li>
+            <!-- Dropdown for Categories -->
+            <ul>
+              <li class="dropdown">
+               <a href="#" class="dropdown-toggle">Categories</a>
+                <ul class="dropdown-menu">
+                <% Category.all.each do |category| %>
+                  <li><%= link_to category.name, category_path(category) %></li>
+                <% end %>
+            </li>
+              </ul>
             <li><%= link_to "About", about_path %></li>
             <li><%= link_to "Contact", contact_path %></li>
           </ul>

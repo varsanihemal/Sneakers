@@ -2,7 +2,7 @@
 <div class="product-page">
   <div class="product-images">
     <div class="main-image">
-      <% if @product.image.present? %>
+       <% if @product.image.present? %>
         <%= image_tag @product.image, alt: @product.name %>
       <% else %>
         <%= image_tag 'default_image.jpg', alt: 'Default Image' %> <!-- Placeholder image -->
@@ -14,18 +14,44 @@
       <% end %>
     </div>
   </div>
+  
   <div class="product-details">
     <h2><%= @product.name %></h2>
     <p class="product-description"><%= @product.description %></p>
     <div class="product-price">
       <span class="current-price">$<%= @product.price %></span>
-      <!-- Remove discount-related code -->
     </div>
-    <div class="quantity-selector">
-      <button class="minus-btn">-</button>
-      <input type="number" value="0" min="0" class="quantity-input">
-      <button class="plus-btn">+</button>
-    </div>
-    <button class="add-to-cart-btn">Add to cart</button>
+    
+    <%= form_with url: cart_items_path, method: :post, local: true do |f| %>
+      <div class="quantity-selector">
+        <button type="button" class="minus-btn">-</button>
+        <%= number_field_tag :quantity, 1, min: 1, class: 'quantity-input', id: 'quantity-field' %>
+        <button type="button" class="plus-btn">+</button>
+      </div>
+      
+      <%= hidden_field_tag :product_id, @product.id %>
+      <%= f.submit 'Add to cart', class: 'add-to-cart-btn' %>
+    <% end %>
   </div>
 </div>
+
+<script>
+  // JavaScript to handle quantity change
+  document.addEventListener('DOMContentLoaded', function() {
+    const minusBtn = document.querySelector('.minus-btn');
+    const plusBtn = document.querySelector('.plus-btn');
+    const quantityField = document.querySelector('#quantity-field');
+    
+    minusBtn.addEventListener('click', function() {
+      let currentValue = parseInt(quantityField.value, 10);
+      if (currentValue > 1) {
+        quantityField.value = currentValue - 1;
+      }
+    });
+    
+    plusBtn.addEventListener('click', function() {
+      let currentValue = parseInt(quantityField.value, 10);
+      quantityField.value = currentValue + 1;
+    });
+  });
+</script>

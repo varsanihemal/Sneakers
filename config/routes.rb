@@ -10,6 +10,7 @@
     resources :categories, only: [:show]
     devise_for :users
     resource :cart, only: [:show]
+    resources :cart_items, only: [:create]
 
 
     root 'home#index'

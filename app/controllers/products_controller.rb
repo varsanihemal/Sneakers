@@ -13,6 +13,7 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.find(params[:id])
+    @cart = current_user.cart # or however you manage carts
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: 'Product not found'
   end

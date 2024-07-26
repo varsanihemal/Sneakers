@@ -5,7 +5,7 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
   <%= javascript_include_tag 'application' %>
   <%= stylesheet_link_tag 'custom' %> <!-- Link to your custom CSS file -->
 </head>
@@ -41,7 +41,7 @@
           <div class="user-info">
             <p>Welcome, <%= current_user.email %></p>
           </div>
-          <%= link_to "Cart", cart_path, class: "cart-link" %>
+          <%= link_to "Cart", cart_path(current_user.cart), class: "cart-link" %>
           <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
         <% else %>
           <%= link_to "Login", new_user_session_path, class: "login-link" %>

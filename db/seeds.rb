@@ -2,7 +2,29 @@
 ProductImage.destroy_all
 Product.destroy_all
 Category.destroy_all
+Province.destroy_all
 AdminUser.destroy_all if Rails.env.development?
+
+# Create provinces
+provinces = [
+  { name: "Alberta" },
+  { name: "British Columbia" },
+  { name: "Manitoba" },
+  { name: "New Brunswick" },
+  { name: "Newfoundland and Labrador" },
+  { name: "Northwest Territories" },
+  { name: "Nova Scotia" },
+  { name: "Nunavut" },
+  { name: "Ontario" },
+  { name: "Prince Edward Island" },
+  { name: "Quebec" },
+  { name: "Saskatchewan" },
+  { name: "Yukon" }
+]
+
+provinces.each do |province_data|
+  Province.find_or_create_by!(name: province_data[:name])
+end
 
 # Create categories
 categories = ["Casual", "Sports"]

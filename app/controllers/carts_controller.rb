@@ -1,10 +1,26 @@
-# app/controllers/carts_controller.rb
 class CartsController < ApplicationController
-  before_action :authenticate_user! # Ensure user is signed in to view cart
+  before_action :set_cart
 
   def show
-    @cart = current_user.carts.first
-    # Or, if you have a way to mark an active cart:
-    # @cart = current_user.carts.find_by(active: true)
+    @cart_items = @cart.cart_items.includes(:product)
+  end
+
+  def update_cart_item
+    @cart_item = @cart.cart_items.find(params[:id])
+    new_quantity = params[:quantity].to_i
+
+    if new_quantity > 0
+      @cart_item.update(quantity: new_quantity)
+    else
+      @cart_item.destroy
+    end
+
+    redirect_to cart_path(@cart)
+  end
+
+  private
+
+  def set_cart
+    @cart = current_user.cart
   end
 end

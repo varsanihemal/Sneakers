@@ -1,17 +1,21 @@
-<!-- app/views/carts/show.html.erb -->
-<h1>Your Cart</h1>
-
-<% if @cart %>
-  <ul>
-    <% @cart.cart_items.each do |item| %>
-      <li>
-        <%= image_tag item.product.product_images.first&.image_url if item.product.product_images.any? %>
-        <h3><%= item.product.name %></h3>
-        <p>Quantity: <%= item.quantity %></p>
-        <p>Price: <%= number_to_currency(item.product.price) %></p>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>Your cart is empty.</p>
-<% end %>
+<div class="cart">
+  <% @cart_items.each do |cart_item| %>
+    <div class="cart-item">
+      <% if cart_item.product.image.attached? %>
+        <%= image_tag rails_blob_url(cart_item.product.image, only_path: true), alt: cart_item.product.name, class: 'cart-item-image' %>
+      <% else %>
+        <%= image_tag 'default_image.jpg', alt: 'Default Image', class: 'cart-item-image' %>
+      <% end %>
+      <div>
+        <h3><%= cart_item.product.name %></h3>
+        <p>$<%= cart_item.product.price %></p>
+      </div>
+      <div class="quantity-selector">
+        <%= button_to '-', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity - 1 }, class: 'quantity-btn', disabled: cart_item.quantity <= 1 %>
+        <%= number_field_tag 'quantity', cart_item.quantity, value: cart_item.quantity, min: 1, class: 'quantity-input', data: { cart_item_id: cart_item.id } %>
+        <%= button_to '+', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity + 1 }, class: 'quantity-btn' %>
+      </div>
+      <%= button_to 'Remove', cart_cart_item_path(@cart, cart_item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'remove-button' %>
+    </div>
+  <% end %>
+</div>

@@ -1,10 +1,4 @@
-<!-- app/views/products/index.html.erb -->
 <h1>Products</h1>
-
-<%= form_with url: products_path, method: :get, local: true, class: "category-form" do %>
-  <%= select_tag :category, options_from_collection_for_select(@categories, :id, :name, params[:category]), prompt: "Select a category" %>
-  <%= submit_tag "Filter", class: "filter-button" %>
-<% end %>
 
 <div class="products">
   <% @products.each do |product| %>
@@ -13,6 +7,14 @@
         <%= image_tag product.image_url, alt: product.name, class: "product-image" if product.image_url.present? %>
         <h2><%= product.name %></h2>
         <p><%= number_to_currency(product.price) %></p>
+      <% end %>
+
+      <!-- Form to add the product to the cart -->
+      <%= form_with(url: cart_items_path, method: :post, local: true) do |form| %>
+        <%= form.hidden_field :product_id, value: product.id %>
+        <%= form.number_field :quantity, min: 1, value: 1 %>
+        <%= form.hidden_field :cart_id, value: current_user.cart.id %>
+        <%= form.submit "Add to Cart" %>
       <% end %>
     </div>
   <% end %>

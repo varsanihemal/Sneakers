@@ -32,6 +32,8 @@ gem 'devise'
 gem 'sassc'
 gem 'carrierwave'
 gem 'ransack'
+gem 'bcrypt', '~> 3.1.7'
+
 
 
 

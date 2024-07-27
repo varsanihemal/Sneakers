@@ -4,9 +4,16 @@
   <% @products.each do |product| %>
     <div class="product">
       <%= link_to product.name, product_path(product) %>
-      <% if product.image.attached? %>
-        <%= image_tag product.image, class: 'product-img' %>
+
+      <% # Display the first attached image for the product %>
+      <% if product.product_images.any? %>
+        <%# Get the first image from the product_images %>
+        <% first_image = product.product_images.first.image %>
+        <%= image_tag rails_blob_url(first_image, only_path: true), class: 'product-img' %>
+      <% else %>
+        <%= image_tag 'placeholder_image.jpg', class: 'product-img' %>
       <% end %>
+
       <p><%= number_to_currency(product.price) %></p>
     </div>
   <% end %>

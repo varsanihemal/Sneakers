@@ -1,11 +1,19 @@
-<!-- app/views/categories/show.html.erb -->
 <h1><%= @category.name %></h1>
 
 <% if @casual_shoes.present? %>
   <ul>
     <% @casual_shoes.each do |product| %>
       <li>
-        <%= link_to image_tag(product.product_images.first&.image_url, alt: product.name), product_path(product) if product.product_images.any? %>
+        <% if product.product_images.any? %>
+          <% image = product.product_images.first.image %>
+          <% if image.attached? %>
+            <%= link_to image_tag(rails_blob_url(image, only_path: true), alt: product.name), product_path(product) %>
+          <% else %>
+            <%= link_to image_tag('default_image.jpg', alt: 'Default Image'), product_path(product) %>
+          <% end %>
+        <% else %>
+          <%= link_to image_tag('default_image.jpg', alt: 'Default Image'), product_path(product) %>
+        <% end %>
         <h3><%= link_to product.name, product_path(product) %></h3>
         <p><%= product.description %></p>
         <p>Price: <%= number_to_currency(product.price) %></p>

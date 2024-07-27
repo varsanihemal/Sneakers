@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
+  resources :orders, only: [:new, :create, :show]
   resources :carts, only: [:show] do
     resources :cart_items, only: [:create, :update, :destroy]
   end
@@ -18,4 +19,5 @@ Rails.application.routes.draw do
   get 'sports', to: 'pages#sports'
   get 'about', to: 'pages#about'
   get 'contact', to: 'pages#contact'
+  get 'orders/get_tax_rates', to: 'orders#get_tax_rates'
 end

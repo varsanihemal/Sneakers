@@ -12,17 +12,14 @@ class User < ApplicationRecord
   validates :address, presence: true
   validates :province_id, presence: true
 
-  # Automatically create a cart for the user upon creation
   after_create :create_cart
 
-  # Convenience method to get the current cart
   def current_cart
     cart || create_cart
   end
 
   private
 
-  # Creates a cart for the user
   def create_cart
     Cart.create(user: self)
   end

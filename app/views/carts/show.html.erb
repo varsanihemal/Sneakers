@@ -1,21 +1,31 @@
 <div class="cart">
-  <% @cart_items.each do |cart_item| %>
-    <div class="cart-item">
-      <% if cart_item.product.image.attached? %>
-        <%= image_tag rails_blob_url(cart_item.product.image, only_path: true), alt: cart_item.product.name, class: 'cart-item-image' %>
-      <% else %>
-        <%= image_tag 'default_image.jpg', alt: 'Default Image', class: 'cart-item-image' %>
-      <% end %>
-      <div>
-        <h3><%= cart_item.product.name %></h3>
-        <p>$<%= cart_item.product.price %></p>
+  <% if @cart_items.any? %>
+    <% @cart_items.each do |cart_item| %>
+      <div class="cart-item">
+        <% if cart_item.product.first_image.present? %>
+      <%= image_tag rails_blob_url(cart_item.product.first_image, only_path: true), alt: cart_item.product.name, class: 'cart-item-image' %>
+    <% else %>
+      <%= image_tag 'default_image.jpg', alt: 'Default Image', class: 'cart-item-image' %>
+    <% end %>
+    <p><%= cart_item.product.name %> - <%= cart_item.quantity %> x <%= number_to_currency(cart_item.product.price) %></p>
+        <div>
+          <h3><%= cart_item.product.name %></h3>
+          <p><%= number_to_currency(cart_item.product.price) %></p>
+        </div>
+        <div class="quantity-selector">
+          <%= button_to '-', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity - 1 }, class: 'quantity-btn', disabled: cart_item.quantity <= 1 %>
+          <%= number_field_tag 'quantity', cart_item.quantity, value: cart_item.quantity, min: 1, class: 'quantity-input', data: { cart_item_id: cart_item.id } %>
+          <%= button_to '+', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity + 1 }, class: 'quantity-btn' %>
+        </div>
+        <%= button_to 'Remove', cart_cart_item_path(@cart, cart_item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'remove-button' %>
       </div>
-      <div class="quantity-selector">
-        <%= button_to '-', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity - 1 }, class: 'quantity-btn', disabled: cart_item.quantity <= 1 %>
-        <%= number_field_tag 'quantity', cart_item.quantity, value: cart_item.quantity, min: 1, class: 'quantity-input', data: { cart_item_id: cart_item.id } %>
-        <%= button_to '+', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity + 1 }, class: 'quantity-btn' %>
-      </div>
-      <%= button_to 'Remove', cart_cart_item_path(@cart, cart_item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'remove-button' %>
+    <% end %>
+
+    <div class="checkout">
+      <%= link_to 'Proceed to Checkout', new_order_path, class: 'checkout-button' %>
     </div>
+
+  <% else %>
+    <p>Your cart is empty.</p>
   <% end %>
 </div>

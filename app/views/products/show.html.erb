@@ -1,8 +1,9 @@
 <div class="product-page">
   <div class="product-images">
     <div class="main-image">
-      <% if @product.image.attached? %>
-        <%= image_tag rails_blob_url(@product.image, only_path: true), alt: @product.name %>
+      <% if @product.product_images.any? %>
+        <%# Display the first image as the main image %>
+        <%= image_tag rails_blob_url(@product.product_images.first.image, only_path: true), alt: @product.name %>
       <% else %>
         <%= image_tag 'placeholder_image.jpg', alt: 'Placeholder Image' %>
       <% end %>
@@ -18,19 +19,17 @@
     <h2><%= @product.name %></h2>
     <p class="product-description"><%= @product.description %></p>
     <div class="product-price">
-      <span class="current-price">$<%= @product.price %></span>
+      <span class="current-price"><%= number_to_currency(@product.price) %></span>
     </div>
 
     <!-- Form to add the product to the cart -->
-    <%= form_with(url: cart_cart_items_path(current_user.cart), method: :post, local: true) do |form| %>
-      <%= form.hidden_field :product_id, value: @product.id %>
-      <%= form.number_field :quantity, min: 1, value: 1, id: 'quantity-field' %>
-      <%= form.submit "Add to Cart" %>
-    <% end %>
-
+  <%= form_with(url: cart_cart_items_path(current_user.current_cart), method: :post, local: true) do |form| %>
+  <%= form.hidden_field :product_id, value: @product.id %>
+  <%= form.number_field :quantity, min: 1, value: 1, id: 'quantity-field' %>
+  <%= form.submit "Add to Cart" %>
+<% end %>
   </div>
 </div>
-
 
 
 <script>

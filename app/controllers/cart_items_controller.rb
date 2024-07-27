@@ -3,12 +3,16 @@ class CartItemsController < ApplicationController
 
   def create
     product = Product.find(params[:product_id])
+    quantity = params[:quantity].to_i # Get the quantity from params and convert it to an integer
+
     @cart_item = @cart.cart_items.find_by(product: product)
 
     if @cart_item
-      @cart_item.increment!(:quantity)
+      # Update the quantity of an existing cart item
+      @cart_item.update(quantity: @cart_item.quantity + quantity)
     else
-      @cart_item = @cart.cart_items.create(product: product, quantity: 1)
+      # Create a new cart item with the specified quantity
+      @cart_item = @cart.cart_items.create(product: product, quantity: quantity)
     end
 
     redirect_to cart_path(@cart)

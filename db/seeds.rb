@@ -5,25 +5,29 @@ Category.destroy_all
 Province.destroy_all
 AdminUser.destroy_all if Rails.env.development?
 
-# Create provinces
+# Create provinces with tax rates
 provinces = [
-  { name: "Alberta" },
-  { name: "British Columbia" },
-  { name: "Manitoba" },
-  { name: "New Brunswick" },
-  { name: "Newfoundland and Labrador" },
-  { name: "Northwest Territories" },
-  { name: "Nova Scotia" },
-  { name: "Nunavut" },
-  { name: "Ontario" },
-  { name: "Prince Edward Island" },
-  { name: "Quebec" },
-  { name: "Saskatchewan" },
-  { name: "Yukon" }
+  { name: "Alberta", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 },
+  { name: "British Columbia", gst_rate: 0.05, pst_rate: 0.07, hst_rate: 0.00 },
+  { name: "Manitoba", gst_rate: 0.05, pst_rate: 0.07, hst_rate: 0.00 },
+  { name: "New Brunswick", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.15 },
+  { name: "Newfoundland and Labrador", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.15 },
+  { name: "Nova Scotia", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.15 },
+  { name: "Ontario", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.13 },
+  { name: "Prince Edward Island", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.10 },
+  { name: "Quebec", gst_rate: 0.05, pst_rate: 0.10, hst_rate: 0.00 },
+  { name: "Saskatchewan", gst_rate: 0.05, pst_rate: 0.06, hst_rate: 0.00 },
+  { name: "Northwest Territories", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 },
+  { name: "Nunavut", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 },
+  { name: "Yukon", gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 }
 ]
 
 provinces.each do |province_data|
-  Province.find_or_create_by!(name: province_data[:name])
+  Province.find_or_create_by!(name: province_data[:name]) do |province|
+    province.gst_rate = province_data[:gst_rate]
+    province.pst_rate = province_data[:pst_rate]
+    province.hst_rate = province_data[:hst_rate]
+  end
 end
 
 # Create categories
@@ -50,23 +54,24 @@ products.each do |product_data|
   category = Category.find_by(name: product_data[:category_name])
   next unless category # Skip if category not found
 
-  new_product = Product.new(
+  new_product = Product.create!(
     name: product_data[:name],
     description: product_data[:description],
     price: product_data[:price],
-    category: category # Ensure category is correctly set
+    category: category
   )
 
   # Attach image if it exists
-  image_path = Rails.root.join('public', 'images', product_data[:image_url])
+  image_path = Rails.root.join('app/assets/images', product_data[:image_url])
   if File.exist?(image_path)
     puts "Attaching image: #{image_path}" # Debug output
-    new_product.image.attach(io: File.open(image_path), filename: product_data[:image_url])
+    new_product_image = ProductImage.create!(
+      product: new_product,
+      image: Rails.root.join('app/assets/images', product_data[:image_url]).open
+    )
   else
     puts "Image not found: #{image_path}" # Debug output
   end
-
-  new_product.save!
 end
 
 # Create an admin user

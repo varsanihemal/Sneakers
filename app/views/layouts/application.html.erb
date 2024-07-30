@@ -5,7 +5,7 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
   <%= javascript_include_tag 'application' %>
   <%= stylesheet_link_tag 'custom' %> <!-- Link to your custom CSS file -->
@@ -22,16 +22,14 @@
         <nav>
           <ul>
             <!-- Dropdown for Categories -->
-            <ul>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Categories</a>
-                <ul class="dropdown-menu">
-                  <% Category.all.each do |category| %>
-                    <li><%= link_to category.name, category_path(category) %></li>
-                  <% end %>
-                </ul>
-              </li>
-            </ul>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle">Categories</a>
+              <ul class="dropdown-menu">
+                <% Category.all.each do |category| %>
+                  <li><%= link_to category.name, category_path(category) %></li>
+                <% end %>
+              </ul>
+            </li>
             <li><%= link_to "About", about_path %></li>
             <li><%= link_to "Contact", contact_path %></li>
           </ul>
@@ -39,18 +37,20 @@
       </div>
       <div class="user-menu">
         <% if user_signed_in? %>
-  <div class="user-info">
-    <p>Welcome, <%= current_user.email %></p>
-    <% if current_user.cart %>
-      <%= link_to "Cart", cart_path(current_user.cart), class: "cart-link" %>
-    <% else %>
-      <p>Your cart is not available.</p>
-    <% end %>
-    <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
-  </div>
-<% else %>
-  <%= link_to "Login", new_user_session_path, class: "login-link" %>
-<% end %>
+          <div class="user-info">
+            <p>Welcome, <%= current_user.email %></p>
+            <% if current_user.cart %>
+              <%= link_to "Cart", cart_path(current_user.cart), class: "cart-link" %>
+            <% else %>
+              <p>Your cart is not available.</p>
+            <% end %>
+            <%= link_to "View My Orders", orders_path, class: "orders-link" %> <!-- Link to Orders -->
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
+          </div>
+        <% else %>
+          <%= link_to "Login", new_user_session_path, class: "login-link" %>
+        <% end %>
+      </div>
     </div>
   </header>
 
@@ -59,6 +59,5 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 </html>

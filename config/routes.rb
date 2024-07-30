@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
-  resources :orders, only: [:new, :create, :show]
+  resources :orders, only: [:index, :show, :new, :create]
   resources :carts, only: [:show] do
     resources :cart_items, only: [:create, :update, :destroy]
   end

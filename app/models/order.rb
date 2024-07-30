@@ -3,6 +3,16 @@ class Order < ApplicationRecord
   belongs_to :province
   has_many :order_items
 
+  # Specify which attributes are searchable
+  def self.ransackable_attributes(auth_object = nil)
+    ["address", "city", "created_at", "id", "postal_code", "province_id", "status", "tax_amount", "total_amount", "updated_at", "user_id"]
+  end
+
+  # Specify which associations are searchable
+  def self.ransackable_associations(auth_object = nil)
+    ["user", "province", "order_items"]  # List the associations that you want to be searchable
+  end
+
   # Calculate the subtotal of the order
   def subtotal
     order_items.sum { |item| item.price_at_purchase * item.quantity }

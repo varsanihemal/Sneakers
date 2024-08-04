@@ -1,7 +1,9 @@
 class Order < ApplicationRecord
   belongs_to :user
   belongs_to :province
-  has_many :order_items
+  has_many :order_items, dependent: :destroy
+
+  validates :address, :city, :postal_code, :province_id, presence: true
 
   # Specify which attributes are searchable
   def self.ransackable_attributes(auth_object = nil)
@@ -20,16 +22,19 @@ class Order < ApplicationRecord
 
   # Calculate GST based on the province's GST rate
   def gst
+    return 0 unless province && province.gst_rate
     subtotal * province.gst_rate
   end
 
   # Calculate PST based on the province's PST rate
   def pst
+    return 0 unless province && province.pst_rate
     subtotal * province.pst_rate
   end
 
   # Calculate HST based on the province's HST rate
   def hst
+    return 0 unless province && province.hst_rate
     subtotal * province.hst_rate
   end
 

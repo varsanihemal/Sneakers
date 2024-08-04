@@ -31,5 +31,5 @@ ActiveAdmin.register Product do
 
   filter :name
   filter :price
-  filter :category
+  filter :category, as: :select, collection: Category.pluck(:name, :id)
 end

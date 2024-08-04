@@ -1,12 +1,11 @@
-# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
   before_action :set_cart
   before_action :set_provinces, only: [:new, :create]
   before_action :set_order, only: [:show]
-  before_action :authenticate_user! # Ensure user is logged in
+  before_action :authenticate_user!
 
   def index
-    @orders = current_user.orders.order(created_at: :desc)  # Fetch all orders for the logged-in user
+    @orders = current_user.orders.order(created_at: :desc)
   end
 
   def show
@@ -18,12 +17,29 @@ class OrdersController < ApplicationController
 
   def new
     @order = Order.new
+    # Ensure @provinces is set in `set_provinces` before rendering `new` view
   end
 
   def create
+    Rails.logger.debug "Order Params: #{order_params.inspect}"
+
     @order = Order.new(order_params)
     @order.user_id = current_user.id
-    @order.province = Province.find(params[:order][:province_id])
+
+    # Ensure that province_id is present and valid
+    province_id = params[:order][:province_id]
+    if province_id.present?
+      begin
+        @order.province = Province.find(province_id)
+      rescue ActiveRecord::RecordNotFound => e
+        Rails.logger.debug "Province not found: #{e.message}"
+        flash[:error] = "Province not found."
+        render :new and return
+      end
+    else
+      flash[:error] = "Province ID is missing."
+      render :new and return
+    end
 
     if @order.save
       current_user.cart.cart_items.each do |cart_item|
@@ -36,61 +52,9 @@ class OrdersController < ApplicationController
 
       current_user.cart.cart_items.destroy_all
 
-      # Redirect to PayPal for payment
-      redirect_to create_paypal_payment_orders_path(order_id: @order.id, order_total: @order.total_amount)
+      # Redirect to the order's show page (invoice)
+      redirect_to @order, notice: 'Order was successfully created. Your invoice is available.'
     else
-      render :new
-    end
-  end
-
-  def create_paypal_payment
-    @order = Order.find(params[:order_id])
-    amount = params[:order_total]
-
-    payment = PayPal::SDK::REST::Payment.new(
-      intent:  "sale",
-      payer:  { payment_method: "paypal" },
-      redirect_urls: {
-        return_url: execute_paypal_payment_orders_url(order_id: @order.id),
-        cancel_url: new_order_url
-      },
-      transactions: [{
-        item_list: {
-          items: [{
-            name: "Order ##{@order.id}",
-            sku: "item",
-            price: amount,
-            currency: "USD",
-            quantity: 1
-          }]
-        },
-        amount: {
-          total: amount,
-          currency: "USD"
-        },
-        description: "Order ##{@order.id} description."
-      }]
-    )
-
-    if payment.create
-      redirect_to payment.links.find{|v| v.method == "REDIRECT"}.href
-    else
-      flash[:error] = payment.error["message"]
-      render :new
-    end
-  end
-
-  def execute_paypal_payment
-    payment = PayPal::SDK::REST::Payment.find(params[:paymentId])
-
-    if payment.execute(payer_id: params[:PayerID])
-      # Mark the order as paid in your system
-      @order = Order.find(params[:order_id])
-      @order.update(status: 'paid') # Ensure you have a `status` field for this
-
-      redirect_to @order, notice: 'Payment was successful.'
-    else
-      flash[:error] = 'Payment could not be completed.'
       render :new
     end
   end

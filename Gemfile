@@ -36,6 +36,8 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'paypal-sdk-rest'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'kaminari'
+gem 'bootstrap', '~> 5.0.0'
+
 
 
 

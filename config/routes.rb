@@ -1,4 +1,3 @@
-# config/routes.rb
 Rails.application.routes.draw do
   # Admin routes for ActiveAdmin
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -15,7 +14,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
   # Orders routes
-  resources :orders, only: [:index, :show, :new, :create]
+  resources :orders, only: [:index, :show, :create, :new, :edit, :update]
 
   # Carts and cart items
   resources :carts, only: [:show] do
@@ -29,6 +28,7 @@ Rails.application.routes.draw do
   get 'sports', to: 'pages#sports'
   get 'about', to: redirect('/static_pages/about')
   get 'contact', to: redirect('/static_pages/contact')
+
   # Search route
   get 'search_products', to: 'home#index', as: :search_products
 

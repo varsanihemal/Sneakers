@@ -3,7 +3,7 @@ class Order < ApplicationRecord
   belongs_to :province
   has_many :order_items, dependent: :destroy
 
-  validates :address, :city, :postal_code, :province_id, presence: true
+  validates :address, :city, :postal_code, :province_id, :total_amount, presence: true
 
   # Specify which attributes are searchable
   def self.ransackable_attributes(auth_object = nil)
@@ -17,7 +17,10 @@ class Order < ApplicationRecord
 
   # Calculate the subtotal of the order
   def subtotal
-    order_items.sum { |item| item.price_at_purchase * item.quantity }
+    puts "Calculating subtotal..."
+    subtotal = order_items.sum { |item| item.price_at_purchase * item.quantity }
+    puts "Subtotal: #{subtotal}"
+    subtotal
   end
 
   # Calculate GST based on the province's GST rate
@@ -40,6 +43,9 @@ class Order < ApplicationRecord
 
   # Calculate the total amount including taxes
   def total_amount
-    subtotal + gst + pst + hst
+    puts "Calculating total amount..."
+    total = subtotal + gst + pst + hst
+    puts "Total Amount: #{total}"
+    total
   end
 end

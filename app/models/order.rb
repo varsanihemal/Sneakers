@@ -3,7 +3,15 @@ class Order < ApplicationRecord
   belongs_to :province
   has_many :order_items, dependent: :destroy
 
+
   validates :address, :city, :postal_code, :province_id, :total_amount, presence: true
+  validates :address, presence: true
+  validates :city, presence: true
+  validates :postal_code, presence: true
+  validates :province_id, presence: true
+  validates :total_amount, numericality: { greater_than_or_equal_to: 0 }
+  validates :tax_amount, numericality: { greater_than_or_equal_to: 0 }
+
 
   # Specify which attributes are searchable
   def self.ransackable_attributes(auth_object = nil)

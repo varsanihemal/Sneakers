@@ -2,55 +2,34 @@
   <div class="product-images">
     <div class="main-image">
       <% if @product.product_images.any? %>
-        <%# Display the first image as the main image %>
-        <%= image_tag rails_blob_url(@product.product_images.first.image, only_path: true), alt: @product.name %>
+        <%= image_tag rails_blob_url(@product.product_images.first.image, only_path: true), alt: @product.name, class: 'main-image' %>
       <% else %>
-        <%= image_tag 'placeholder_image.jpg', alt: 'Placeholder Image' %>
+        <%= image_tag 'placeholder_image.jpg', alt: 'Placeholder Image', class: 'main-image' %>
       <% end %>
     </div>
     <div class="thumbnail-images">
       <% @product.product_images.each do |image| %>
-        <%= image_tag rails_blob_url(image.image, only_path: true), class: "thumbnail", alt: @product.name %>
+        <%= image_tag rails_blob_url(image.image, only_path: true), class: 'thumbnail', alt: @product.name %>
       <% end %>
     </div>
   </div>
 
   <div class="product-details">
-    <h2><%= @product.name %></h2>
+    <h2 class="product-name"><%= @product.name %></h2>
     <p class="product-description"><%= @product.description %></p>
     <div class="product-price">
       <span class="current-price"><%= number_to_currency(@product.price) %></span>
     </div>
 
     <!-- Form to add the product to the cart -->
-  <%= form_with(url: cart_cart_items_path(current_user.current_cart), method: :post, local: true) do |form| %>
-  <%= form.hidden_field :product_id, value: @product.id %>
-  <%= form.number_field :quantity, min: 1, value: 1, id: 'quantity-field' %>
-  <%= form.submit "Add to Cart" %>
-<% end %>
+    <%= form_with(url: cart_cart_items_path(current_user.current_cart), method: :post, local: true) do |form| %>
+      <%= form.hidden_field :product_id, value: @product.id %>
+      <div class="quantity-selector">
+        <button type="button" class="quantity-btn minus-btn">-</button>
+        <%= form.number_field :quantity, min: 1, value: 1, id: 'quantity-field' %>
+        <button type="button" class="quantity-btn plus-btn">+</button>
+      </div>
+      <%= form.submit "Add to Cart", class: 'add-to-cart-btn' %>
+    <% end %>
   </div>
 </div>
-
-
-<script>
-  // JavaScript to handle quantity change
-  document.addEventListener('DOMContentLoaded', function() {
-    const minusBtn = document.querySelector('.minus-btn');
-    const plusBtn = document.querySelector('.plus-btn');
-    const quantityField = document.querySelector('#quantity-field');
-    
-    if (minusBtn && plusBtn && quantityField) {
-      minusBtn.addEventListener('click', function() {
-        let currentValue = parseInt(quantityField.value, 10);
-        if (currentValue > 1) {
-          quantityField.value = currentValue - 1;
-        }
-      });
-      
-      plusBtn.addEventListener('click', function() {
-        let currentValue = parseInt(quantityField.value, 10);
-        quantityField.value = currentValue + 1;
-      });
-    }
-  });
-</script>

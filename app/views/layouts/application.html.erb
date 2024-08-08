@@ -7,8 +7,8 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-  <%= javascript_include_tag 'application' %>
   <%= stylesheet_link_tag 'custom' %> <!-- Link to your custom CSS file -->
+  <%= javascript_include_tag 'application' %>
 </head>
 <body>
   <header>
@@ -20,18 +20,18 @@
           <% end %>
         </div>
         <nav>
-          <ul>
+          <ul class="nav">
             <!-- Dropdown for Categories -->
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle">Categories</a>
-              <ul class="dropdown-menu">
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" id="categoriesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+              <div class="dropdown-menu" aria-labelledby="categoriesDropdown">
                 <% Category.all.each do |category| %>
-                  <li><%= link_to category.name, category_path(category) %></li>
+                  <a class="dropdown-item" href="<%= category_path(category) %>"><%= category.name %></a>
                 <% end %>
-              </ul>
+              </div>
             </li>
-            <li><%= link_to "About", about_path %></li>
-            <li><%= link_to "Contact", contact_path %></li>
+            <li class="nav-item"><%= link_to "About", about_path, class: "nav-link" %></li>
+            <li class="nav-item"><%= link_to "Contact", contact_path, class: "nav-link" %></li>
           </ul>
         </nav>
       </div>
@@ -40,11 +40,11 @@
           <div class="user-info">
             <p>Welcome, <%= current_user.email %></p>
             <% if current_user.cart %>
-              <%= link_to "Cart", cart_path(current_user.cart), class: "cart-link" %>
+              <%= link_to "Cart", cart_path(current_user.cart.id), class: "cart-link" %>
             <% else %>
               <p>Your cart is not available.</p>
             <% end %>
-            <%= link_to "View My Orders", orders_path, class: "orders-link" %> <!-- Link to Orders -->
+            <%= link_to "View My Orders", orders_path, class: "orders-link" %>
             <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
           </div>
         <% else %>
@@ -54,12 +54,13 @@
     </div>
   </header>
 
-  <%= yield %>
+  <main>
+    <%= yield %>
+  </main>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -8,51 +8,9 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
   <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    .custom-search-form {
-      margin-bottom: 30px;
-    }
-
-    .product-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: box-shadow 0.3s;
-      text-align: center; /* Center text inside the card */
-    }
-
-    .product-card:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-   .product-img {
-  width: 100%;
-  height: auto; /* Adjust height automatically based on width */
-  aspect-ratio: 16 / 8; /* Adjust aspect ratio as needed */
-  object-fit: cover;
-  background-color: #f8f9fa; /* Optional background color */
-}
-
-    .product-title {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-
-    .product-price {
-      color: #007bff;
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-
-    .pagination-container {
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    .container {
-      margin-top: 20px;
-    }
+    /* Include CSS here or link to a stylesheet as needed */
   </style>
 </head>
 <body>
@@ -84,7 +42,7 @@
               <%= image_tag 'placeholder_image.jpg', class: 'product-img', alt: 'Placeholder image' %>
             <% end %>
 
-            <div class="card-body">
+           <div class="card-body">
               <h5 class="product-title"><%= link_to product.name, product_path(product) %></h5>
               <p class="product-price"><%= number_to_currency(product.price) %></p>
               <%= link_to 'View Details', product_path(product), class: 'btn btn-primary' %>

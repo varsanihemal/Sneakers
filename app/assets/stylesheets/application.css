@@ -1,35 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100..900&display=swap');
-
 * {
   padding: 0;
   margin: 0;
 }
 
 body {
-  font-family: 'Kumbh Sans';
+  font-family: 'Roboto', sans-serif;
+
 }
 
-a {
-  text-decoration: none;
+.card-body {
+  padding: 0;
 }
-
-ul li {
-  list-style: none;
-}
-
-.container {
-  margin-top: 20px;
+.custom-search-form {
+  margin-bottom: 30px;
 }
 
 .product-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  border: none; /* Remove border */
+  border-radius: 0; /* Remove border-radius */
+  box-shadow: none; /* Remove box-shadow */
+  padding: 15px; /* Add padding inside the card */
+  text-align: left; /* Align text to the left */
+  background-color: transparent; /* Set background color to transparent */
+}
+
+.product-card:hover {
+  box-shadow: none; /* Remove box-shadow on hover */
 }
 
 .product-img {
   width: 100%;
-  height: 200px; /* Ensure all images are the same size */
+  height: auto;
+  aspect-ratio: 16 / 8;
   object-fit: cover;
   background-color: #f8f9fa;
 }
@@ -37,15 +39,25 @@ ul li {
 .product-title {
   font-size: 1.25rem;
   font-weight: bold;
+  color: black; /* Set text color to black */
 }
 
 .product-price {
-  color: #007bff;
   font-size: 1.1rem;
+  color: black; /* Set text color to black */
   margin-bottom: 10px;
 }
 
 .pagination-container {
   margin-top: 30px;
   text-align: center;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.product-card .card-body {
+  padding: 0;
+  padding-top: 10px;
 }

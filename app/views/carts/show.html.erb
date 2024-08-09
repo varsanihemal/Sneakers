@@ -1,31 +1,162 @@
-<div class="cart">
-  <% if @cart_items.any? %>
-    <% @cart_items.each do |cart_item| %>
-      <div class="cart-item">
-        <% if cart_item.product.first_image.present? %>
-      <%= image_tag rails_blob_url(cart_item.product.first_image, only_path: true), alt: cart_item.product.name, class: 'cart-item-image' %>
-    <% else %>
-      <%= image_tag 'default_image.jpg', alt: 'Default Image', class: 'cart-item-image' %>
-    <% end %>
-    <p><%= cart_item.product.name %> - <%= cart_item.quantity %> x <%= number_to_currency(cart_item.product.price) %></p>
-        <div>
-          <h3><%= cart_item.product.name %></h3>
-          <p><%= number_to_currency(cart_item.product.price) %></p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Basic Styling */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .cart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 900px;
+      margin: 20px auto;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .cart-item-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 15px;
+    }
+
+    .cart-item p, .cart-item h3 {
+      margin: 0;
+      color: #333;
+    }
+
+    .cart-item h3 {
+      font-size: 1.2rem;
+    }
+
+    .cart-item .quantity-selector {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      margin-right: 20px;
+    }
+
+    .quantity-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0 5px;
+    }
+
+    .quantity-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .quantity-input {
+      width: 60px;
+      text-align: center;
+      margin: 0 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+    }
+
+    .remove-button {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-left: 15px;
+    }
+
+    .remove-button:hover {
+      background-color: #c82333;
+    }
+
+    .checkout {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .checkout-button {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .checkout-button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="cart">
+    <% if @cart_items.any? %>
+      <% @cart_items.each do |cart_item| %>
+        <div class="cart-item">
+          <% if cart_item.product.first_image.present? %>
+            <%= image_tag rails_blob_url(cart_item.product.first_image, only_path: true), alt: cart_item.product.name, class: 'cart-item-image' %>
+          <% else %>
+            <%= image_tag 'default_image.jpg', alt: 'Default Image', class: 'cart-item-image' %>
+          <% end %>
+          <div class="cart-item-details">
+            <h3><%= cart_item.product.name %></h3>
+            <p><%= number_to_currency(cart_item.product.price) %> x <%= cart_item.quantity %></p>
+          </div>
+          <div class="quantity-selector">
+            <%= button_to '-', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity - 1 }, class: 'quantity-btn', disabled: cart_item.quantity <= 1 %>
+            <%= number_field_tag 'quantity', cart_item.quantity, value: cart_item.quantity, min: 1, class: 'quantity-input', data: { cart_item_id: cart_item.id } %>
+            <%= button_to '+', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity + 1 }, class: 'quantity-btn' %>
+          </div>
+          <%= button_to 'Remove', cart_cart_item_path(@cart, cart_item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'remove-button' %>
         </div>
-        <div class="quantity-selector">
-          <%= button_to '-', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity - 1 }, class: 'quantity-btn', disabled: cart_item.quantity <= 1 %>
-          <%= number_field_tag 'quantity', cart_item.quantity, value: cart_item.quantity, min: 1, class: 'quantity-input', data: { cart_item_id: cart_item.id } %>
-          <%= button_to '+', cart_cart_item_path(@cart, cart_item), method: :patch, params: { quantity: cart_item.quantity + 1 }, class: 'quantity-btn' %>
-        </div>
-        <%= button_to 'Remove', cart_cart_item_path(@cart, cart_item), method: :delete, data: { confirm: 'Are you sure?' }, class: 'remove-button' %>
+      <% end %>
+
+      <div class="checkout">
+        <%= link_to 'Proceed to Checkout', new_order_path, class: 'checkout-button' %>
       </div>
+
+    <% else %>
+      <p>Your cart is empty.</p>
     <% end %>
+  </div>
 
-    <div class="checkout">
-      <%= link_to 'Proceed to Checkout', new_order_path, class: 'checkout-button' %>
-    </div>
-
-  <% else %>
-    <p>Your cart is empty.</p>
-  <% end %>
-</div>
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

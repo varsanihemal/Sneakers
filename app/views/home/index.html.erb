@@ -1,33 +1,108 @@
-<h1>Welcome to Our Store</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Our Store</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-<!-- Search Form -->
-<%= form_with url: root_path, method: :get, local: true do %>
-  <div class="form-group">
-    <%= text_field_tag :keyword, params[:keyword], placeholder: "Search for products...", class: "form-control" %>
-    <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), include_blank: "All Categories", class: "form-control" %>
-    <%= submit_tag "Search", class: "btn btn-primary mt-2" %>
-  </div>
-<% end %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .custom-search-form {
+      margin-bottom: 30px;
+    }
 
-<div class="products">
-  <% @products.each do |product| %>
-    <div class="product">
-      <%= link_to product.name, product_path(product) %>
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s;
+      text-align: center; /* Center text inside the card */
+    }
 
-      <% # Display the first attached image for the product %>
-      <% if product.product_images.any? %>
-        <% first_image = product.product_images.first.image %>
-        <%= image_tag rails_blob_url(first_image, only_path: true), class: 'product-img' %>
-      <% else %>
-        <%= image_tag 'placeholder_image.jpg', class: 'product-img' %>
+    .product-card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+   .product-img {
+  width: 100%;
+  height: auto; /* Adjust height automatically based on width */
+  aspect-ratio: 16 / 8; /* Adjust aspect ratio as needed */
+  object-fit: cover;
+  background-color: #f8f9fa; /* Optional background color */
+}
+
+    .product-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .product-price {
+      color: #007bff;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .pagination-container {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Search Form -->
+    <%= form_with url: root_path, method: :get, local: true, class: "custom-search-form" do %>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <%= text_field_tag :keyword, params[:keyword], placeholder: "Search for products...", class: "form-control" %>
+        </div>
+        <div class="form-group col-md-12">
+          <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), include_blank: "All Categories", class: "form-control" %>
+        </div>
+        <div class="form-group col-md-12">
+          <%= submit_tag "Search", class: "btn btn-primary btn-block" %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Products Grid -->
+    <div class="row">
+      <% @products.each do |product| %>
+        <div class="col-md-4 mb-4">
+          <div class="product-card">
+            <% if product.product_images.any? %>
+              <% first_image = product.product_images.first.image %>
+              <%= image_tag rails_blob_url(first_image, only_path: true), class: 'product-img', alt: product.name %>
+            <% else %>
+              <%= image_tag 'placeholder_image.jpg', class: 'product-img', alt: 'Placeholder image' %>
+            <% end %>
+
+            <div class="card-body">
+              <h5 class="product-title"><%= link_to product.name, product_path(product) %></h5>
+              <p class="product-price"><%= number_to_currency(product.price) %></p>
+              <%= link_to 'View Details', product_path(product), class: 'btn btn-primary' %>
+            </div>
+          </div>
+        </div>
       <% end %>
-
-      <p><%= number_to_currency(product.price) %></p>
     </div>
-  <% end %>
-</div>
 
-<!-- Pagination Links -->
-<div class="pagination">
-  <%= paginate @products %>
-</div>
+    <!-- Pagination Links -->
+    <div class="pagination-container">
+      <%= paginate @products %>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

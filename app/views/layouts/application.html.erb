@@ -13,15 +13,17 @@
 <body>
   <header>
     <div class="container">
-      <div class="left">
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <!-- Logo -->
         <div class="logo">
           <%= link_to root_path do %>
-            <%= image_tag 'logo.svg', alt: 'Logo' %>
+            <%= image_tag 'logo.svg', alt: 'Logo', class: 'logo-image' %>
           <% end %>
         </div>
+
+        <!-- Navigation Menu -->
         <nav>
           <ul class="nav">
-            <!-- Dropdown for Categories -->
             <li class="nav-item dropdown">
               <a href="#" class="nav-link dropdown-toggle" id="categoriesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
               <div class="dropdown-menu" aria-labelledby="categoriesDropdown">
@@ -34,22 +36,24 @@
             <li class="nav-item"><%= link_to "Contact", contact_path, class: "nav-link" %></li>
           </ul>
         </nav>
-      </div>
-      <div class="user-menu">
-        <% if user_signed_in? %>
-          <div class="user-info">
-            <p>Welcome, <%= current_user.email %></p>
-            <% if current_user.cart %>
-              <%= link_to "Cart", cart_path(current_user.cart.id), class: "cart-link" %>
-            <% else %>
-              <p>Your cart is not available.</p>
-            <% end %>
-            <%= link_to "View My Orders", orders_path, class: "orders-link" %>
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
-          </div>
-        <% else %>
-          <%= link_to "Login", new_user_session_path, class: "login-link" %>
-        <% end %>
+
+        <!-- User Menu -->
+        <div class="user-menu">
+          <% if user_signed_in? %>
+            <div class="user-info">
+              <p class="mb-0">Welcome, <%= current_user.email %></p>
+              <% if current_user.cart %>
+                <%= link_to "Cart", cart_path(current_user.cart.id), class: "cart-link" %>
+              <% else %>
+                <p>Your cart is not available.</p>
+              <% end %>
+              <%= link_to "View My Orders", orders_path, class: "orders-link" %>
+              <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "logout-link" %>
+            </div>
+          <% else %>
+            <%= link_to "Login", new_user_session_path, class: "login-link" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </header>

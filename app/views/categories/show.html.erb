@@ -1,26 +1,108 @@
-<h1><%= @category.name %></h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @category.name %> - Our Store</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .category-header {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
 
-<% if @casual_shoes.present? %>
-  <ul>
-    <% @casual_shoes.each do |product| %>
-      <li>
-        <% if product.product_images.any? %>
-          <% image = product.product_images.first.image %>
-          <% if image.attached? %>
-            <%= link_to image_tag(rails_blob_url(image, only_path: true), alt: product.name), product_path(product) %>
-          <% else %>
-            <%= link_to image_tag('default_image.jpg', alt: 'Default Image'), product_path(product) %>
-          <% end %>
-        <% else %>
-          <%= link_to image_tag('default_image.jpg', alt: 'Default Image'), product_path(product) %>
+    .category-header h1 {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .product-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .product-item {
+      display: flex;
+      flex-wrap: wrap;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s;
+    }
+
+    .product-item:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 15px;
+    }
+
+    .product-details {
+      flex: 1;
+    }
+
+    .product-details h3 {
+      font-size: 1.5rem;
+      margin-top: 0;
+    }
+
+    .product-details p {
+      margin: 5px 0;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="category-header">
+      <h1><%= @category.name %></h1>
+    </div>
+
+    <% if @casual_shoes.present? %>
+      <ul class="product-list">
+        <% @casual_shoes.each do |product| %>
+          <li class="product-item">
+            <% if product.product_images.any? %>
+              <% image = product.product_images.first.image %>
+              <% if image.attached? %>
+                <%= link_to image_tag(rails_blob_url(image, only_path: true), class: 'product-image', alt: product.name), product_path(product) %>
+              <% else %>
+                <%= link_to image_tag('default_image.jpg', class: 'product-image', alt: 'Default Image'), product_path(product) %>
+              <% end %>
+            <% else %>
+              <%= link_to image_tag('default_image.jpg', class: 'product-image', alt: 'Default Image'), product_path(product) %>
+            <% end %>
+            <div class="product-details">
+              <h3><%= link_to product.name, product_path(product) %></h3>
+              <p><%= product.description %></p>
+              <p class="product-price">Price: <%= number_to_currency(product.price) %></p>
+              <p>Stock: <%= product.stock_quantity %></p>
+            </div>
+          </li>
         <% end %>
-        <h3><%= link_to product.name, product_path(product) %></h3>
-        <p><%= product.description %></p>
-        <p>Price: <%= number_to_currency(product.price) %></p>
-        <p>Stock: <%= product.stock_quantity %></p>
-      </li>
+      </ul>
+    <% else %>
+      <p>No casual shoes available.</p>
     <% end %>
-  </ul>
-<% else %>
-  <p>No casual shoes available.</p>
-<% end %>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

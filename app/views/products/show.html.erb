@@ -1,35 +1,121 @@
-<div class="product-page">
-  <div class="product-images">
-    <div class="main-image">
-      <% if @product.product_images.any? %>
-        <%= image_tag rails_blob_url(@product.product_images.first.image, only_path: true), alt: @product.name, class: 'main-image' %>
-      <% else %>
-        <%= image_tag 'placeholder_image.jpg', alt: 'Placeholder Image', class: 'main-image' %>
-      <% end %>
-    </div>
-    <div class="thumbnail-images">
-      <% @product.product_images.each do |image| %>
-        <%= image_tag rails_blob_url(image.image, only_path: true), class: 'thumbnail', alt: @product.name %>
-      <% end %>
-    </div>
-  </div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Page</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-  <div class="product-details">
-    <h2 class="product-name"><%= @product.name %></h2>
-    <p class="product-description"><%= @product.description %></p>
-    <div class="product-price">
-      <span class="current-price"><%= number_to_currency(@product.price) %></span>
-    </div>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Basic Styling */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
 
-    <!-- Form to add the product to the cart -->
-    <%= form_with(url: cart_cart_items_path(current_user.current_cart), method: :post, local: true) do |form| %>
-      <%= form.hidden_field :product_id, value: @product.id %>
-      <div class="quantity-selector">
-        <button type="button" class="quantity-btn minus-btn">-</button>
-        <%= form.number_field :quantity, min: 1, value: 1, id: 'quantity-field' %>
-        <button type="button" class="quantity-btn plus-btn">+</button>
+    .product-page {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-images {
+      /* flex: 1; */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 15px; /* Reduced margin to bring content closer */
+    }
+
+    .main-image {
+      max-height: 400px; /* Adjust this value as needed */
+      width: auto;
+      border-radius: 8px;
+      object-fit: cover; /* Ensure image covers area without distortion */
+    }
+
+    .product-details {
+      flex: 2;
+      max-width: 600px;
+    }
+
+    .product-name {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .product-description {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .product-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .add-to-cart-btn {
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: block;
+      margin-top: 20px;
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="product-page">
+    <div class="product-images">
+      <div class="main-image">
+        <% if @product.product_images.any? %>
+          <%= image_tag rails_blob_url(@product.product_images.first.image, only_path: true), alt: @product.name, class: 'main-image' %>
+        <% else %>
+          <%= image_tag 'placeholder_image.jpg', alt: 'Placeholder Image', class: 'main-image' %>
+        <% end %>
       </div>
-      <%= form.submit "Add to Cart", class: 'add-to-cart-btn' %>
-    <% end %>
+    </div>
+
+    <div class="product-details">
+      <h2 class="product-name"><%= @product.name %></h2>
+      <p class="product-description"><%= @product.description %></p>
+      <div class="product-price">
+        <span class="current-price"><%= number_to_currency(@product.price) %></span>
+      </div>
+
+      <!-- Form to add the product to the cart -->
+      <%= form_with(url: cart_cart_items_path(current_user.current_cart), method: :post, local: true) do |form| %>
+        <%= form.hidden_field :product_id, value: @product.id %>
+        <div class="quantity-selector">
+          <%= form.number_field :quantity, min: 1, value: 1, id: 'quantity-field' %>
+        </div>
+        <%= form.submit "Add to Cart", class: 'add-to-cart-btn' %>
+      <% end %>
+    </div>
   </div>
-</div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

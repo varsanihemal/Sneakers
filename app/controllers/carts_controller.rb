@@ -9,7 +9,7 @@ class CartsController < ApplicationController
     @cart_item = @cart.cart_items.find(params[:id])
     new_quantity = params[:quantity].to_i
 
-    if new_quantity > 0
+    if new_quantity.positive?
       @cart_item.update(quantity: new_quantity)
     else
       @cart_item.destroy

@@ -38,7 +38,8 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'kaminari'
 gem 'bootstrap', '~> 5.0.0'
 gem 'stripe'
-
+gem 'rubocop'
+gem 'rubocop-rails'
 
 
 

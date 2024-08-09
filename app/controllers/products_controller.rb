@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :authenticate_user!, only: [:show] # Ensure user is logged in before accessing `show`
+  before_action :authenticate_user!, only: [:show]
 
   def index
     @categories = Category.all
@@ -15,6 +15,6 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
     @cart = current_user.cart if user_signed_in? # Ensure current_user is not nil
   rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, alert: 'Product not found'
+    redirect_to root_path, alert: "Product not found"
   end
 end

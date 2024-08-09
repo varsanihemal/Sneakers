@@ -1,19 +1,24 @@
 class HomeController < ApplicationController
   def index
     @products = Product.all
+    @products = filter_by_keyword(@products)
+    @products = filter_by_category(@products)
+    @products = @products.page(params[:page]).per(5)
+  end
 
-    # Filter by keyword if provided
-    if params[:keyword].present?
-      keyword = params[:keyword].downcase
-      @products = @products.where("LOWER(name) LIKE ? OR LOWER(description) LIKE ?", "%#{keyword}%", "%#{keyword}%")
-    end
+  private
 
-    # Filter by category if provided
-    if params[:category_id].present? && params[:category_id].present?
-      @products = @products.where(category_id: params[:category_id])
-    end
+  def filter_by_keyword(products)
+    return products if params[:keyword].blank?
 
-    # Paginate the results
-    @products = @products.page(params[:page]).per(5) # Adjust per(5) to your desired number of items per page
+    keyword = params[:keyword].downcase
+    products.where("LOWER(name) LIKE ? OR LOWER(description) LIKE ?", "%#{keyword}%",
+                   "%#{keyword}%")
+  end
+
+  def filter_by_category(products)
+    return products if params[:category_id].blank?
+
+    products.where(category_id: params[:category_id])
   end
 end

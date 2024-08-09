@@ -38,16 +38,26 @@ end
 
 # Create products
 products = [
-  { name: "Nike Air Max", description: "Comfortable and stylish sports shoes.", price: 129.99, category_name: "Casual", image_url: "airmax.jpeg" },
-  { name: "Custom", description: "High-performance running shoes.", price: 179.99, category_name: "Casual", image_url: "image-product-1.jpg" },
-  { name: "Puma Classic", description: "Classic sports shoes.", price: 89.99, category_name: "Sports", image_url: "puma_classic.jpg" },
-  { name: "Reebok Sports", description: "Durable and lightweight sports shoes.", price: 109.99, category_name: "Sports", image_url: "reebok.jpg" },
-  { name: "Converse All Star", description: "Iconic sports shoes.", price: 59.99, category_name: "Sports", image_url: "converse.jpg" },
-  { name: "Vans Slip-On", description: "Easy-to-wear sports shoes.", price: 49.99, category_name: "Sports", image_url: "vans.webp" },
-  { name: "Nike Air Zoom", description: "High-performance sports shoes.", price: 139.99, category_name: "Sports", image_url: "studs.jpg" },
-  { name: "New Balance 990", description: "Comfortable and durable running shoes.", price: 149.99, category_name: "Casual", image_url: "balance.jpeg" },
-  { name: "Asics Gel-Kayano", description: "Stability running shoes.", price: 159.99, category_name: "Sports", image_url: "gel.jpg" },
-  { name: "Under Armour HOVR", description: "Innovative and stylish running shoes.", price: 129.99, category_name: "Sports", image_url: "under.jpg" }
+  { name: "Nike Air Max", description: "Comfortable and stylish sports shoes.", price: 129.99,
+category_name: "Casual", image_url: "airmax.jpeg" },
+  { name: "Custom", description: "High-performance running shoes.", price: 179.99,
+category_name: "Casual", image_url: "image-product-1.jpg" },
+  { name: "Puma Classic", description: "Classic sports shoes.", price: 89.99,
+category_name: "Sports", image_url: "puma_classic.jpg" },
+  { name: "Reebok Sports", description: "Durable and lightweight sports shoes.", price: 109.99,
+category_name: "Sports", image_url: "reebok.jpg" },
+  { name: "Converse All Star", description: "Iconic sports shoes.", price: 59.99,
+category_name: "Sports", image_url: "converse.jpg" },
+  { name: "Vans Slip-On", description: "Easy-to-wear sports shoes.", price: 49.99,
+category_name: "Sports", image_url: "vans.webp" },
+  { name: "Nike Air Zoom", description: "High-performance sports shoes.", price: 139.99,
+category_name: "Sports", image_url: "studs.jpg" },
+  { name: "New Balance 990", description: "Comfortable and durable running shoes.", price: 149.99,
+category_name: "Casual", image_url: "balance.jpeg" },
+  { name: "Asics Gel-Kayano", description: "Stability running shoes.", price: 159.99,
+category_name: "Sports", image_url: "gel.jpg" },
+  { name: "Under Armour HOVR", description: "Innovative and stylish running shoes.", price: 129.99,
+category_name: "Sports", image_url: "under.jpg" }
 ]
 
 products.each do |product_data|
@@ -55,24 +65,27 @@ products.each do |product_data|
   next unless category # Skip if category not found
 
   new_product = Product.create!(
-    name: product_data[:name],
+    name:        product_data[:name],
     description: product_data[:description],
-    price: product_data[:price],
-    category: category
+    price:       product_data[:price],
+    category:
   )
 
   # Attach image if it exists
-  image_path = Rails.root.join('app/assets/images', product_data[:image_url])
+  image_path = Rails.root.join("app/assets/images", product_data[:image_url])
   if File.exist?(image_path)
-    puts "Attaching image: #{image_path}" # Debug output
-    new_product_image = ProductImage.create!(
+    Rails.logger.debug "Attaching image: #{image_path}" # Debug output
+    ProductImage.create!(
       product: new_product,
-      image: Rails.root.join('app/assets/images', product_data[:image_url]).open
+      image:   Rails.root.join("app/assets/images", product_data[:image_url]).open
     )
   else
-    puts "Image not found: #{image_path}" # Debug output
+    Rails.logger.debug "Image not found: #{image_path}" # Debug output
   end
 end
 
 # Create an admin user
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+if Rails.env.development?
+  AdminUser.create!(email: "admin@example.com", password: "password",
+                    password_confirmation: "password")
+end

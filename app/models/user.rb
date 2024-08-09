@@ -3,8 +3,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_one :cart, dependent: :destroy
-  has_many :orders
-  has_many :reviews
+  has_many :orders, dependent: :destroy
+  has_many :reviews, dependent: :destroy
   belongs_to :province
 
   validates :city, presence: true

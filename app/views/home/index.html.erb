@@ -11,6 +11,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* Include CSS here or link to a stylesheet as needed */
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      text-align: center;
+    }
+    .product-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .product-title {
+      font-size: 1.25rem;
+      margin: 10px 0;
+    }
+    .product-price {
+      font-size: 1.125rem;
+      color: #007bff;
+    }
+    .pagination-container {
+      margin-top: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -39,10 +62,11 @@
               <% first_image = product.product_images.first.image %>
               <%= image_tag rails_blob_url(first_image, only_path: true), class: 'product-img', alt: product.name %>
             <% else %>
-              <%= image_tag 'placeholder_image.jpg', class: 'product-img', alt: 'Placeholder image' %>
+              <!-- Use a default image if no product image is present -->
+              <%= image_tag 'default_image.jpg', class: 'product-img', alt: 'Default image' %>
             <% end %>
 
-           <div class="card-body">
+            <div class="card-body">
               <h5 class="product-title"><%= link_to product.name, product_path(product) %></h5>
               <p class="product-price"><%= number_to_currency(product.price) %></p>
               <%= link_to 'View Details', product_path(product), class: 'btn btn-primary' %>

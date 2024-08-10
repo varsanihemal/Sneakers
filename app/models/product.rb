@@ -9,7 +9,6 @@ class Product < ApplicationRecord
   # Validations
   validates :name, presence: true
   validates :price, numericality: { greater_than: 0 }
-  validates :stock_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   # Instance method to retrieve the first image attachment
   def first_image

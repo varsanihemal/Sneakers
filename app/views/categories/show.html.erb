@@ -91,7 +91,6 @@
               <h3><%= link_to product.name, product_path(product) %></h3>
               <p><%= product.description %></p>
               <p class="product-price">Price: <%= number_to_currency(product.price) %></p>
-              <p>Stock: <%= product.stock_quantity %></p>
             </div>
           </li>
         <% end %>

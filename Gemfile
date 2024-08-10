@@ -40,6 +40,8 @@ gem 'bootstrap', '~> 5.0.0'
 gem 'stripe'
 gem 'rubocop'
 gem 'rubocop-rails'
+gem 'pg'
+
 
 
 

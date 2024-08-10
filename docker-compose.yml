@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: hvarsani  
+      POSTGRES_PASSWORD: hemal19 
+      POSTGRES_DB: sneakers_production
+
+  web:
+    build: .
+    command: bash entrypoints/docker-entrypoint.sh
+    volumes:
+      - ".:/myapp"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://hvarsani:hemal19@db/sneakers_production 
+    ports:
+      - "3000:3000"
+
+volumes:
+  pg_data:

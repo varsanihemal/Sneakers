@@ -1,13 +1,16 @@
-<h1>My Orders</h1>
+<h1 class="mb-4">My Orders</h1>
 
 <% if @orders.present? %>
-  <ul>
+  <ul class="list-group">
     <% @orders.each do |order| %>
-      <li>
-        <%= link_to "Order ##{order.id}", order_path(order) %> - Total: <%= number_to_currency(order.total_amount) %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <%= link_to "Order ##{order.id}", order_path(order), class: "text-decoration-none" %>
+        <span class="badge bg-primary rounded-pill">
+          <%= number_to_currency(order.total_amount) %>
+        </span>
       </li>
     <% end %>
   </ul>
 <% else %>
-  <p>No orders found.</p>
+  <p class="text-muted">No orders found.</p>
 <% end %>

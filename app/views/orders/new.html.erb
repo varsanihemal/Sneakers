@@ -1,24 +1,30 @@
-<%= form_with(model: @order, url: orders_path, local: true, data: { controller: "stripe", stripe_client_secret: @payment_intent.client_secret }) do |form| %>
-  <%= form.hidden_field :payment_intent_id, value: @payment_intent.id %>
-  <div class="field">
-    <%= form.label :address %>
-    <%= form.text_field :address %>
-  </div>
-  <div class="field">
-    <%= form.label :city %>
-    <%= form.text_field :city %>
-  </div>
-  <div class="field">
-    <%= form.label :postal_code %>
-    <%= form.text_field :postal_code %>
-  </div>
-  <div class="field">
-    <%= form.label :province_id %>
-    <%= form.collection_select :province_id, @provinces, :id, :name, prompt: "Select Province" %>
+<%= form_with(model: @order, url: orders_path, local: true, data: { controller: "stripe", stripe_client_secret: @payment_intent.client_secret }, html: { class: "order-form" }) do |form| %>
+  <div class="form-group">
+    <%= form.label :address, class: "form-label" %>
+    <%= form.text_field :address, class: "form-control" %>
   </div>
 
-  <div id="payment-element"></div>
-  <button id="submit">Complete Purchase</button>
+  <div class="form-group">
+    <%= form.label :city, class: "form-label" %>
+    <%= form.text_field :city, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :postal_code, class: "form-label" %>
+    <%= form.text_field :postal_code, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :province_id, class: "form-label" %>
+    <%= form.collection_select :province_id, @provinces, :id, :name, { prompt: "Select Province" }, { class: "form-control" } %>
+  </div>
+
+  <div id="payment-element" class="payment-element"></div>
+
+  <div class="form-group">
+    <%= form.hidden_field :payment_intent_id, value: @payment_intent.id %>
+    <%= form.submit "Complete Purchase", id: "submit", class: "btn btn-primary" %>
+  </div>
 
   <script src="https://js.stripe.com/v3/"></script>
   <script>

@@ -1,79 +1,47 @@
 class OrdersController < ApplicationController
-  before_action :set_cart, only: [:create]
-  before_action :set_provinces, only: %i[new create]
+  before_action :set_cart
+  before_action :set_provinces, only: [:new, :create]
   before_action :set_order, only: [:show]
+  before_action :authenticate_user!
+
+  def index
+    @orders = current_user.orders
+  end
 
   def new
     @order = Order.new
+    @payment_intent = Stripe::PaymentIntent.create(
+      amount: (@cart.total_amount * 100).to_i, # Amount in cents
+      currency: 'cad', # Canadian dollars
+      payment_method_types: ['card']
+    )
+    @provinces = Province.all
   end
 
   def create
-    @order = build_order
+    @order = Order.new(order_params)
+    @order.user = current_user
+    @order.province = Province.find(params[:order][:province_id])
 
     if @order.save
-      process_order
-      redirect_to order_path(@order), notice: "Order was successfully created."
+      @cart.cart_items.each do |cart_item|
+        @order.order_items.create(
+          product: cart_item.product,
+          quantity: cart_item.quantity,
+          price_at_purchase: cart_item.product.price
+        )
+      end
+      # Clear the cart after creating the order
+      @cart.cart_items.destroy_all
+
+      redirect_to @order, notice: 'Order was successfully created.'
     else
       render :new
     end
   end
 
-  def show
-    calculate_order_totals(@order)
-  end
 
   private
-
-  def build_order
-    order = Order.new(order_params)
-    order.user = current_user
-    order.province = Province.find(params[:order][:province_id])
-    calculate_order_totals(order)
-    order
-  end
-
-  def calculate_order_totals(order)
-    subtotal = calculate_subtotal
-    order.total_amount = subtotal + calculate_taxes
-    Rails.logger.debug "Subtotal: #{subtotal}, Total Amount: #{order.total_amount}"
-  end
-
-  def calculate_subtotal
-    @cart.cart_items.includes(:product).sum { |item| item.product.price * item.quantity }
-  end
-
-  def calculate_taxes
-    order.gst + order.pst + order.hst
-  end
-
-  def process_order
-    create_order_items
-    @cart.cart_items.destroy_all
-    handle_payment
-  end
-
-  def create_order_items
-    @order.order_items.create(@cart.cart_items.map do |cart_item|
-      {
-        product:           cart_item.product,
-        quantity:          cart_item.quantity,
-        price_at_purchase: cart_item.product.price
-      }
-    end)
-  end
-
-  def handle_payment
-    return if @order.payment_intent_id.present?
-
-    payment_intent = Stripe::PaymentIntent.create(
-      amount:               (@order.total_amount * 100).to_i,
-      currency:             "usd",
-      payment_method_types: ["card"],
-      metadata:             { order_id: @order.id }
-    )
-
-    @order.update(payment_intent_id: payment_intent.id)
-  end
 
   def order_params
     params.require(:order).permit(:address, :city, :postal_code, :province_id, :payment_intent_id)

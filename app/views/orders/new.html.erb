@@ -1,60 +1,59 @@
-<!-- app/views/orders/new.html.erb -->
-<% if @payment_intent %>
-  <%= form_with(model: @order, url: orders_path, local: true, data: { controller: "stripe", stripe_client_secret: @payment_intent.client_secret }) do |form| %>
-    <%= form.hidden_field :payment_intent_id, value: @payment_intent.id %>
-    <div class="field">
-      <%= form.label :address %>
-      <%= form.text_field :address %>
-    </div>
-    <div class="field">
-      <%= form.label :city %>
-      <%= form.text_field :city %>
-    </div>
-    <div class="field">
-      <%= form.label :postal_code %>
-      <%= form.text_field :postal_code %>
-    </div>
-    <div class="field">
-      <%= form.label :province_id %>
-      <%= form.collection_select :province_id, @provinces, :id, :name, prompt: "Select Province" %>
-    </div>
+<%= form_with(model: @order, url: orders_path, local: true, data: { controller: "stripe", stripe_client_secret: @payment_intent.client_secret }) do |form| %>
+  <%= form.hidden_field :payment_intent_id, value: @payment_intent.id %>
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address %>
+  </div>
+  <div class="field">
+    <%= form.label :city %>
+    <%= form.text_field :city %>
+  </div>
+  <div class="field">
+    <%= form.label :postal_code %>
+    <%= form.text_field :postal_code %>
+  </div>
+  <div class="field">
+    <%= form.label :province_id %>
+    <%= form.collection_select :province_id, @provinces, :id, :name, prompt: "Select Province" %>
+  </div>
 
-    <div id="payment-element"></div>
-    <button id="submit">Complete Purchase</button>
+  <div id="payment-element"></div>
+  <button id="submit">Complete Purchase</button>
 
-    <script src="https://js.stripe.com/v3/"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-  var stripe = Stripe('<%= Rails.application.credentials.stripe[:publishable_key] %>');
-  var elements = stripe.elements();
-  var paymentElement = elements.create('payment');
-  paymentElement.mount('#payment-element');
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var stripe = Stripe('<%= Rails.application.credentials.stripe[:publishable_key] %>');
+      var elements = stripe.elements();
+      var paymentElement = elements.create('payment');
+      paymentElement.mount('#payment-element');
 
-  document.getElementById('submit').addEventListener('click', function (event) {
-    event.preventDefault();
+      document.getElementById('submit').addEventListener('click', function (event) {
+        event.preventDefault();
 
-    stripe.confirmPayment({
-      clientSecret: document.querySelector('form').dataset.stripeClientSecret,
-      payment_method: {
-        card: paymentElement,
-      },
-    }).then(function (result) {
-      if (result.error) {
-        console.error(result.error.message);
-      } else {
-        if (result.paymentIntent.status === 'succeeded') {
-          document.querySelector('input[name="order[payment_intent_id]"]').value = result.paymentIntent.id;
-          document.querySelector('form').submit();
-        } else {
-          console.error('Payment status is not succeeded');
-        }
-      }
+        stripe.confirmPayment({
+          clientSecret: document.querySelector('form').dataset.stripeClientSecret,
+          payment_method: {
+            card: paymentElement,
+          },
+        }).then(function (result) {
+          if (result.error) {
+            // Show error in the UI
+            console.error(result.error.message);
+            // You might want to display this error to the user
+          } else {
+            // The payment has been processed!
+            if (result.paymentIntent.status === 'succeeded') {
+              // Add the payment_intent_id to the form and submit
+              document.querySelector('input[name="order[payment_intent_id]"]').value = result.paymentIntent.id;
+              document.querySelector('form').submit();
+            } else {
+              // Handle other statuses if needed
+              console.error('Payment status is not succeeded');
+            }
+          }
+        });
+      });
     });
-  });
-});
-
-    </script>
-  <% end %>
-<% else %>
-  <p>Payment intent not created. Please try again.</p>
+  </script>
 <% end %>

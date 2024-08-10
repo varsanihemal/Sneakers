@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_05_205532) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_09_213210) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -101,7 +101,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_05_205532) do
 
   create_table "orders", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.decimal "total_amount"
     t.decimal "tax_amount", precision: 10, scale: 2
     t.string "status"
     t.datetime "created_at", null: false
@@ -110,7 +109,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_05_205532) do
     t.string "address"
     t.string "city"
     t.string "postal_code"
-    t.string "paypal_payment_id"
     t.decimal "gst_rate", precision: 5, scale: 2
     t.decimal "pst_rate", precision: 5, scale: 2
     t.decimal "hst_rate", precision: 5, scale: 2
@@ -120,6 +118,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_05_205532) do
     t.string "payment_status"
     t.string "stripe_charge_id"
     t.string "payment_intent_id"
+    t.integer "total_amount"
+    t.string "client_secret"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 

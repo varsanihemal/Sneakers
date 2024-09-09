@@ -1,6 +1,3 @@
-# Let's update the README.md content to include the search functionality.
-
-updated_readme_content = """
 # Sneakers E-commerce Store 🛒👟
 
 Welcome to **Sneakers**, a full-stack e-commerce web application built using Ruby on Rails, designed for selling shoes for men, women, kids, and sports categories.

@@ -9,9 +9,7 @@ Welcome to **Sneakers**, a full-stack e-commerce web application built using Rub
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Screenshots](#screenshots)
-- [Installation](#installation)
 - [Usage](#usage)
-- [Future Enhancements](#future-enhancements)
 - [License](#license)
 - [Contact](#contact)
 
